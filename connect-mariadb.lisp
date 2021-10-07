@@ -46,7 +46,7 @@
   (with-open-file (out-stream output-filepath
 			  :direction :output
 			  :if-does-not-exist :create
-			  :if-exist :append)
+			  :if-exists :append)
     (mapcar #'(lambda (str)
 		(write-line str out-stream))
 	    (list-to-csv-line output-query))))
