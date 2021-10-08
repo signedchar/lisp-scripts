@@ -14,13 +14,18 @@
 (cffi:load-foreign-library "libmariadbclient.so"
 			   :search-path "/usr/lib/x86_64-linux-gnu")
 
-;; connection with database and show the first 10 rows.
-(defparameter *data* (dbi:with-connection
-			 (connection :mysql :database-name "example"
-					    :username "lisper" :password "password")
-		       (let* ((query (dbi:prepare connection "select * from example limit 10"))
-			      (output (dbi:execute query)))
-			 (dbi:fetch-all output))))
+(defparameter *database-name* "example")
+(defparameter *username* "lisper")
+(defparameter *userpasswd* "password")
+
+(defun query-sql (query)
+  (dbi:with-connection
+      (conn :mysql :database-name *database-name*
+		   :username *username*
+		   :password *userpasswd*)
+    (let* ((qr (dbi:prepare conn query))
+	   (output-query (dbi:execute qr)))
+      (dbi:fetch-all output-query))))
 
 (defun clean-symbols (output-query)
   "Remove the symbols of the query."
@@ -42,11 +47,12 @@
 			lst))))
 	  (clean-symbols output-query)))
 
-(defun write-line-in-a-file (output-query output-filepath)
+(defun save-csv (output-query output-filepath)
+  "Making the CSV file, util for visualization with calc sheets."
   (with-open-file (out-stream output-filepath
-			  :direction :output
-			  :if-does-not-exist :create
-			  :if-exists :append)
+			      :direction :output
+			      :if-does-not-exist :create
+			      :if-exists :append)
     (mapcar #'(lambda (str)
 		(write-line str out-stream))
 	    (list-to-csv-line output-query))))
