@@ -56,3 +56,10 @@
     (mapcar #'(lambda (str)
 		(write-line str out-stream))
 	    (list-to-csv-line output-query))))
+
+(defun query-limit-interval (query start limit)
+  "Return a list with the SQL and the filename with the limit."
+  (list
+   (concatenate 'string query " " "LIMIT" " " (write-to-string start)
+		"," (write-to-string limit))
+   (+ start limit)))
