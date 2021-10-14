@@ -3,9 +3,9 @@ Some lisp scripts
 
 ## Connect with MariaDB
 
-This script connect with MariaDB and save the query information in a CSV file.
+This script connect with MariaDB and save the query information in a CSV or spreadsheet file.
 
-### Simple Usage (one query ~ one sheet calc)
+### Simple Usage (one query ~ one spreadsheet)
 
 ```lisp
 (save-csv (query-sql "SELECT * FROM EXAMPLE LIMIT 10") "/home/lisper/first_10.csv")
@@ -14,9 +14,9 @@ This script connect with MariaDB and save the query information in a CSV file.
 Add que query and the filepath. The file save the information.
 
 
-### Bulk usage (one query - massive sheet calc)
+### Bulk usage (one query - massive spreadsheet)
 
-For Build a massive sheet calcs with one query, sheets with a specific number of rows.
+For Build a massive spreadsheets with one query, sheets with a specific number of rows.
 
 ```lisp
 (bulk-csv "SELECT * FROM example WHERE fecha BETWEEN '1966-08-30' AND '1976-08-30'" 0 500 "/home/lisper/output-sheets")

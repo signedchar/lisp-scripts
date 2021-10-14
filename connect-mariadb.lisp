@@ -38,7 +38,7 @@
 	  (clean-symbols output-query)))
 
 (defun save-csv (output-query output-filepath)
-  "Save the query returns in a CSV file or in a sheet calc."
+  "Save the query returns in a CSV file or in a spreadsheet."
   (with-open-file (out-stream output-filepath
 			      :direction :output
 			      :if-does-not-exist :create
@@ -83,7 +83,7 @@ return false."
    (cct (append-slash directory-path) (write-to-string filename))))
 
 (defun bulk-csv (query start limit directory-path)
-  "Build a pool of CSV or sheets calc from a query, the limit of rows for
+  "Build a pool of CSV or spreadsheets from a query, the limit of rows for
 each sheet is the `limit' variable."
   (let* ((new-query (query-interval query start limit))
 	 (new-filename (filename directory-path (cadr new-query))))
