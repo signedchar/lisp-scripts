@@ -9,16 +9,17 @@
 ;; GRANT ALL PRIVILEGES ON example.* TO 'lisper'@localhost
 ;; FLUSH PRIVILEGES;
 
-(ql:quickload '(dbi cffi))
+(ql:quickload '(dbi cffi cl-fad))
 (push "/usr/lib/x86_64-linux-gnu/" cffi:*foreign-library-directories*)
 (cffi:load-foreign-library "libmariadbclient.so"
-			   :search-path "/usr/lib/x86_64-linux-gnu")
+			   :search-path "/usr/lib/x86_64-linux-gnu/")
 
 (defparameter *database-name* "example")
 (defparameter *username* "lisper")
-(defparameter *userpasswd* "password")
+(defparameter *userpasswd* "lisper")
 
 (defun query-sql (query)
+  "Send a query to MariaDB."
   (dbi:with-connection
       (conn :mysql :database-name *database-name*
 		   :username *username*
@@ -48,7 +49,7 @@
 	  (clean-symbols output-query)))
 
 (defun save-csv (output-query output-filepath)
-  "Making the CSV file, util for visualization with calc sheets."
+  "Save the query returns in a CSV file or in a sheet calc."
   (with-open-file (out-stream output-filepath
 			      :direction :output
 			      :if-does-not-exist :create
@@ -57,9 +58,46 @@
 		(write-line str out-stream))
 	    (list-to-csv-line output-query))))
 
-(defun query-limit-interval (query start limit)
-  "Return a list with the SQL and the filename with the limit."
+(defmacro cct (&rest strings)
+  "For abstract concatenate strings."
+  `(concatenate 'string ,@strings))
+
+(defun query-interval (query start limit)
+  "Return a list with a new query and the interval of consult."
   (list
-   (concatenate 'string query " " "LIMIT" " " (write-to-string start)
-		"," (write-to-string limit))
+   (cct query " " "LIMIT " (write-to-string start) "," (write-to-string limit))
    (+ start limit)))
+
+(defun last-char (string)
+  "Return the last character of a string."
+  (char string (- (length string) 1)))
+
+(defun last-slash? (string)
+  "Return T if the last character is a slash '/' else
+return false."
+  (if (equal #\/ (last-char string))
+      t
+      nil))
+
+(defun append-slash (string)
+  "If the `string' have a character slash, return `string', else
+return a `string' with character slash."
+  (if (last-slash? string)
+      string
+      (cct string "/")))
+
+(defun filename (directory-path filename)
+  "Return a complete path if `directory-path' exists, else
+return false."
+  (and
+   (cl-fad:directory-exists-p directory-path)
+   (cct (append-slash directory-path) (write-to-string filename))))
+
+(defun bulk-csv (query start limit directory-path)
+  "Build a pool of CSV or sheets calc from a query, the limit of rows for
+each sheet is the `limit' variable."
+  (let* ((new-query (query-interval query start limit))
+	 (new-filename (filename directory-path (cadr new-query))))
+    (if (equal nil (funcall #'save-csv (query-sql (car new-query)) new-filename))
+	nil
+	(bulk-csv query (+ start limit) limit directory-path))))
