@@ -67,3 +67,33 @@ Restart the service and send again the test:
 ```
 (query-sql "SELECT * FROM EXAMPLE LIMIT 10")
 ```
+
+### Example for MariaDB user configuration
+
+* Operating System configuration:
+
+```bash
+#> cat /etc/os-release
+PRETTY_NAME="Debian GNU/Linux 11 (bullseye)"
+NAME="Debian GNU/Linux"
+VERSION_ID="11"
+VERSION="11 (bullseye)"
+VERSION_CODENAME=bullseye
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+
+#> apt install default-libmysqlclient-dev
+```
+
+* MariaDB configuration:
+
+```bash
+$> mysql -u root
+MariaDB > CREATE DATABASE example;
+MariaDB > CREATE USER 'your_user'@localhost IDENTIFIED BY 'your_password';
+MariaDB > GRANT ALL PRIVILEGES ON *.* TO 'your_user'@localhost IDENTIFIED BY 'your_password';
+MariaDB > GRANT ALL PRIVILEGES ON example.* TO 'your_user'@localhost;
+MariaDB > FLUSH PRIVILEGES;
+```
