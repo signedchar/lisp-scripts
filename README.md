@@ -22,7 +22,7 @@ For Build a massive sheet calcs with one query, sheets with a specific number of
 (bulk-csv "SELECT * FROM example WHERE fecha BETWEEN '1966-08-30' AND '1976-08-30'" 0 500 "/home/lisper/output-sheets")
 ```
 
-** Parameters **
+#### Bulk-csv parameters.
 
 ```lisp
 (bulk-csv query from to directory-filepath)
