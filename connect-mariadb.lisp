@@ -1,14 +1,3 @@
-;; OS Debian Bullseye (11)
-;; Previously install default-libmysqlclient-dev
-;;
-;; Create an user in mariadb
-;; mysql -u root
-;; CREATE DATABASE example;
-;; CREATE USER 'lisper'@localhost IDENTIFIED BY 'password';
-;; GRANT ALL PRIVILEGES ON *.* TO 'lisper'@localhost IDENTIFIED BY 'password';
-;; GRANT ALL PRIVILEGES ON example.* TO 'lisper'@localhost
-;; FLUSH PRIVILEGES;
-
 (ql:quickload '(dbi cffi cl-fad))
 (push "/usr/lib/x86_64-linux-gnu/" cffi:*foreign-library-directories*)
 (cffi:load-foreign-library "libmariadbclient.so"

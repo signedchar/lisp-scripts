@@ -73,7 +73,7 @@ Restart the service and send again the test:
 * Operating System configuration:
 
 ```bash
-#> cat /etc/os-release
+$> cat /etc/os-release
 PRETTY_NAME="Debian GNU/Linux 11 (bullseye)"
 NAME="Debian GNU/Linux"
 VERSION_ID="11"
@@ -84,7 +84,7 @@ HOME_URL="https://www.debian.org/"
 SUPPORT_URL="https://www.debian.org/support"
 BUG_REPORT_URL="https://bugs.debian.org/"
 
-#> apt install default-libmysqlclient-dev
+(root)> apt install default-libmysqlclient-dev
 ```
 
 * MariaDB configuration:
